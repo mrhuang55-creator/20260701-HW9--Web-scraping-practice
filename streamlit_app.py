@@ -9,7 +9,7 @@ st.set_page_config(page_title="CineScrape | 電影探索", page_icon="🌴", lay
 
 # 初始化 Session State
 if 'chat_history' not in st.session_state:
-    st.session_state.chat_history = []
+    st.session_state.chat_history = [{"role": "assistant", "content": "🌴 歡迎來到 CineScrape！我是您的智能海灘小夥伴。今天想看點什麼電影呢？"}]
 if 'chat_error_count' not in st.session_state:
     st.session_state.chat_error_count = 0
 if 'chat_lock_until' not in st.session_state:
