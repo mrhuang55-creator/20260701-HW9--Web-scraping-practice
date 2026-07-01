@@ -95,5 +95,7 @@
     3. CSS 檔案中出現非標準前綴 (`-webkit-background-clip`、`-webkit-line-clamp`) 警告。
 *   **實作設計與修復**：
     1. **可拖曳浮動視窗 (Draggable UI)**：在 `app.js` 中實作 `mousedown`, `mousemove`, `mouseup` 事件，綁定於聊天視窗標題列 (`.chat-header`)。拖曳時動態計算滑鼠與視窗座標差 (Offset)，並將 CSS `right/bottom` 佈局轉為 `left/top` 絕對定位，達成平滑無延遲的拖曳體驗。
-    2. **API 端點對齊官方標準**：捨棄舊版 `v1beta`，將 `app.js` 及 `streamlit_app.py` 的請求 URL 全面升級為 Google 最新標準 `v1/models/gemini-1.5-flash`，徹底解決 404 找不到模型的錯誤。
+    2. **API 端點對齊官方標準 (2026-07 升級)**：
+       * 捨棄舊版 `v1beta`，將 `app.js` 及 `streamlit_app.py` 的請求 URL 全面升級為 Google 最新標準 `v1`。
+       * **模型改朝換代**：由於 `gemini-1.5-flash` 在 2026 年中已正式宣告退役並關閉伺服器 (導致 404 NOT FOUND)，本專案已將預設模型全面升級替換為 2026 年主力推薦的 **`gemini-3.5-flash`**。
     3. **CSS 現代化標準修正**：在 `style.css` 中，為使用 `-webkit` 專屬前綴的屬性，額外補上標準語法 (`background-clip: text;`、`line-clamp: 2;`)，不僅消除編輯器警告，也確保在未來各家現代瀏覽器上的完美相容性。
