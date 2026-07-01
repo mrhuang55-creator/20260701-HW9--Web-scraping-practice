@@ -346,7 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
         headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey };
         body = JSON.stringify({ model: 'gpt-4o-mini', messages: [{ role: 'user', content: 'Hello' }], max_tokens: 5 });
       } else if (provider === 'gemini') {
-        url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
         headers = { 'Content-Type': 'application/json' };
         body = JSON.stringify({ contents: [{ parts: [{ text: "Hello" }] }] });
       } else if (provider === 'opencode') {
@@ -478,7 +478,7 @@ document.addEventListener('DOMContentLoaded', () => {
         botResponse = data.choices[0].message.content.trim();
         
       } else if (provider === 'gemini') {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
         let contents = [];
         chatHistory.forEach(msg => {
           contents.push({ role: msg.role === 'assistant' ? 'model' : 'user', parts: [{ text: msg.content }] });
