@@ -1,8 +1,6 @@
 # 忽略金鑰設定檔，防止洩漏至 GitHub 被自動撤銷
 config.js
 
-# 忽略其他本地生成的暫存與結果檔案
-movies_results.json
-movies_results.csv
+# (已移除 movies_results.json 和 csv 以供雲端讀取)
 .DS_Store
 Thumbs.db
