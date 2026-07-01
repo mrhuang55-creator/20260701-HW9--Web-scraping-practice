@@ -85,3 +85,15 @@
     2. **爬蟲管線升級 (Pipeline Upgrade)**：在 `crawl_movies.py` 寫出 `movies_results.json` 之前，加入了遞迴轉換邏輯 (`traverse` function)。
     3. **自訂替換鏈**：在 OpenCC 轉換後，套用鏈式替換 `.replace('中國臺灣', '臺灣').replace('中國台灣', '臺灣').replace('中国臺灣', '臺灣').replace('中国台湾', '臺灣').replace('台灣', '臺灣')`，確保任何形式的誤植都能被修正。
     4. **向下相容**：加入 `try-except ImportError` 防止未來執行環境未安裝 `opencc` 時發生崩潰，並會在終端機給出警告。
+
+---
+
+## 步驟九：介面拖曳化、API 端點修正與 CSS 標準化
+*   **需求描述**：
+    1. 使用者希望網頁版 (`index.html`) 的 AI 助手介面能夠彈性拖曳，不遮擋主要內容。
+    2. Gemini API 出現 404 連線錯誤，需要修正端點。
+    3. CSS 檔案中出現非標準前綴 (`-webkit-background-clip`、`-webkit-line-clamp`) 警告。
+*   **實作設計與修復**：
+    1. **可拖曳浮動視窗 (Draggable UI)**：在 `app.js` 中實作 `mousedown`, `mousemove`, `mouseup` 事件，綁定於聊天視窗標題列 (`.chat-header`)。拖曳時動態計算滑鼠與視窗座標差 (Offset)，並將 CSS `right/bottom` 佈局轉為 `left/top` 絕對定位，達成平滑無延遲的拖曳體驗。
+    2. **API 端點對齊官方標準**：捨棄舊版 `v1beta`，將 `app.js` 及 `streamlit_app.py` 的請求 URL 全面升級為 Google 最新標準 `v1/models/gemini-1.5-flash`，徹底解決 404 找不到模型的錯誤。
+    3. **CSS 現代化標準修正**：在 `style.css` 中，為使用 `-webkit` 專屬前綴的屬性，額外補上標準語法 (`background-clip: text;`、`line-clamp: 2;`)，不僅消除編輯器警告，也確保在未來各家現代瀏覽器上的完美相容性。
