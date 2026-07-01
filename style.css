@@ -87,11 +87,13 @@ body {
   letter-spacing: -0.05em;
   background: linear-gradient(to right, #1e293b, #0369a1);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 .logo-text span {
   background: linear-gradient(to right, var(--accent-color), var(--accent-secondary));
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 .subtitle {
