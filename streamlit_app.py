@@ -95,7 +95,7 @@ if api_enabled:
                     headers = {'Content-Type': 'application/json', 'Authorization': f'Bearer {api_key}'}
                     body = {"model": "gpt-4o-mini", "messages": [{"role": "user", "content": "Hello"}], "max_tokens": 5}
                 elif provider == "gemini":
-                    url = f'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key={api_key}'
+                    url = f'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key={api_key}'
                     headers = {'Content-Type': 'application/json'}
                     body = {"contents": [{"parts": [{"text": "Hello"}]}]}
                 elif provider == "opencode":
@@ -257,7 +257,7 @@ if user_input:
                         raise Exception(f"API 錯誤 ({res.status_code})")
                         
                 elif provider == "gemini":
-                    url = f'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key={api_key}'
+                    url = f'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key={api_key}'
                     contents = []
                     for msg in st.session_state.chat_history[-10:]:
                         contents.append({

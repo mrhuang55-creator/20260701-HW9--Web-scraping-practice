@@ -33,6 +33,39 @@ document.addEventListener('DOMContentLoaded', () => {
   const apiTestBtn = document.getElementById('api-test-btn');
   const apiTestResult = document.getElementById('api-test-result');
 
+  // Draggable Chat Window Logic
+  const chatHeader = document.querySelector('.chat-header');
+  let isDragging = false;
+  let dragOffsetX = 0;
+  let dragOffsetY = 0;
+
+  chatHeader.addEventListener('mousedown', (e) => {
+    // 避免點擊到設定按鈕或關閉按鈕時也觸發拖曳
+    if (e.target.closest('button')) return;
+    
+    isDragging = true;
+    const rect = chatContainer.getBoundingClientRect();
+    dragOffsetX = e.clientX - rect.left;
+    dragOffsetY = e.clientY - rect.top;
+    
+    // 將原本的 CSS right/bottom 佈局轉換為 left/top，才能穩定拖曳
+    chatContainer.style.right = 'auto';
+    chatContainer.style.bottom = 'auto';
+    chatContainer.style.left = rect.left + 'px';
+    chatContainer.style.top = rect.top + 'px';
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    chatContainer.style.left = (e.clientX - dragOffsetX) + 'px';
+    chatContainer.style.top = (e.clientY - dragOffsetY) + 'px';
+  });
+
+  document.addEventListener('mouseup', () => {
+    isDragging = false;
+  });
+
   // Global State
   let moviesData = [];
   let currentGenre = 'all';
@@ -346,7 +379,7 @@ document.addEventListener('DOMContentLoaded', () => {
         headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey };
         body = JSON.stringify({ model: 'gpt-4o-mini', messages: [{ role: 'user', content: 'Hello' }], max_tokens: 5 });
       } else if (provider === 'gemini') {
-        url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
+        url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
         headers = { 'Content-Type': 'application/json' };
         body = JSON.stringify({ contents: [{ parts: [{ text: "Hello" }] }] });
       } else if (provider === 'opencode') {
@@ -478,7 +511,7 @@ document.addEventListener('DOMContentLoaded', () => {
         botResponse = data.choices[0].message.content.trim();
         
       } else if (provider === 'gemini') {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
+        const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
         let contents = [];
         chatHistory.forEach(msg => {
           contents.push({ role: msg.role === 'assistant' ? 'model' : 'user', parts: [{ text: msg.content }] });
