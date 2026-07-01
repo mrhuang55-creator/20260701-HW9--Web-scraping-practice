@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CineScrape | 精選電影探索殿堂</title>
+  <!-- 引入 Google Fonts Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+TC:wght@300;400;700;900&display=swap" rel="stylesheet">
+  <!-- 引入樣式表 -->
+  <link rel="stylesheet" href="style.css">
+  <!-- 引入配置檔 (包含 API Key，該檔案將被 .gitignore 忽略上傳) -->
+  <script src="config.js"></script>
+  <!-- 延遲載入邏輯腳本 -->
+  <script src="app.js" defer></script>
+</head>
+<body>
+
+  <!-- 背景流光特效元件 -->
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+
+  <div class="container">
+    <!-- 頁首與品牌標誌 -->
+    <header class="header">
+      <div class="logo">
+        <span class="logo-icon">🌴</span>
+        <h1 class="logo-text">Cine<span>Scrape</span></h1>
+      </div>
+      <p class="subtitle">為您精選呈現從 Scrape Center 爬取的 100 部高分神作</p>
+    </header>
+
+    <!-- 控制中心：搜尋、過濾與排序 -->
+    <section class="control-panel">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-input" placeholder="輸入電影名稱進行搜尋...">
+        <button id="clear-search" class="clear-btn">✕</button>
+      </div>
+
+      <div class="filters-group">
+        <!-- 地區過濾 -->
+        <div class="filter-item">
+          <label for="region-select">地區</label>
+          <select id="region-select">
+            <option value="all">全部地區</option>
+            <!-- 將由 JS 動態填充 -->
+          </select>
+        </div>
+
+        <!-- 排序選單 -->
+        <div class="filter-item">
+          <label for="sort-select">排序</label>
+          <select id="sort-select">
+            <option value="default">預設排序</option>
+            <option value="rating-desc">評分：由高到低</option>
+            <option value="date-desc">上映日期：由新到舊</option>
+            <option value="date-asc">上映日期：由舊到新</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- 電影類型滑動選單 -->
+    <nav class="genres-nav">
+      <div class="genres-wrapper" id="genres-wrapper">
+        <button class="genre-tab active" data-genre="all">全部類型</button>
+        <!-- 將由 JS 從資料中動態提取類型並生成 -->
+      </div>
+    </nav>
+
+    <!-- 數據概覽列 -->
+    <div class="stats-bar">
+      <span>已為您篩選出 <strong id="movie-count">0</strong> 部電影</span>
+    </div>
+
+    <!-- 電影卡片展示網格 -->
+    <main class="movie-grid" id="movie-grid">
+      <!-- 骨架屏載入動畫 (Skeleton Loader) -->
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+    </main>
+  </div>
+
+  <!-- 彈出式電影詳細資訊視窗 (Modal) -->
+  <div class="modal-overlay" id="movie-modal">
+    <div class="modal-container">
+      <button class="modal-close-btn" id="modal-close">✕</button>
+      <div class="modal-content" id="modal-detail-content">
+        <!-- 點選卡片後由 JS 動態填入 -->
+      </div>
+    </div>
+  </div>
+
+  <!-- AI 助手對話介面 -->
+  <button class="chat-toggle-btn" id="chat-toggle" title="打開 AI 助手">💬</button>
+  <div class="chat-container" id="chat-container">
+    <div class="chat-header">
+      <div class="chat-header-title">
+        <span style="font-size: 1.2rem; margin-right: 0.5rem;">🌴</span>
+        <div style="text-align: left;">
+          <h4 style="font-size: 0.95rem; font-weight: 600; margin: 0; line-height: 1.2;">CineScrape AI 助手</h4>
+          <span style="font-size: 0.7rem; opacity: 0.8; display: block; line-height: 1.2;">專屬夏日電影推薦</span>
+        </div>
+      </div>
+      <div>
+        <button class="chat-settings-btn" id="chat-settings-btn" title="API 設定">⚙️</button>
+        <button class="chat-close-btn" id="chat-close">✕</button>
+      </div>
+    </div>
+    <!-- API 設定面板 -->
+    <div class="api-settings-panel" id="api-settings-panel" style="display: none;">
+      <h5 style="margin-top:0; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px;">API 設定</h5>
+      
+      <div style="margin-bottom: 10px;">
+        <input type="checkbox" id="api-enable-checkbox">
+        <label for="api-enable-checkbox" style="font-size: 0.85rem; font-weight: bold;">啟用 API (不使用本地特徵推薦)</label>
+      </div>
+
+      <div id="api-config-fields" style="display: none;">
+        <label for="api-provider-select" style="font-size: 0.8rem;">API 服務商</label>
+        <select id="api-provider-select" style="width: 100%; margin-bottom: 8px; padding: 4px; font-size: 0.85rem; border-radius: 4px; border: 1px solid #ccc;">
+          <option value="openai">OpenAI</option>
+          <option value="gemini">Gemini</option>
+          <option value="opencode">OpenCode (Custom)</option>
+        </select>
+        
+        <div id="api-endpoint-container" style="display: none; margin-bottom: 8px;">
+          <label for="api-endpoint-input" style="font-size: 0.8rem;">API 端點 (Base URL)</label>
+          <input type="text" id="api-endpoint-input" placeholder="例如: https://api.your-opencode.com/v1" style="width: 100%; padding: 4px; font-size: 0.85rem; border-radius: 4px; border: 1px solid #ccc;">
+        </div>
+
+        <label for="api-key-input" style="font-size: 0.8rem;">API Key</label>
+        <input type="password" id="api-key-input" placeholder="sk-..." style="width: 100%; margin-bottom: 8px; padding: 4px; font-size: 0.85rem; border-radius: 4px; border: 1px solid #ccc;">
+
+        <button id="api-test-btn" style="width: 100%; padding: 5px; background: #e0f7fa; border: 1px solid #b2ebf2; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">測試連線並儲存</button>
+        <div id="api-test-result" style="font-size: 0.75rem; margin-top: 5px; min-height: 15px;"></div>
+      </div>
+    </div>
+    <div class="chat-messages" id="chat-messages">
+      <div class="chat-message bot">
+        哈囉！我是您的夏日電影助手。我可以幫您推薦、搜尋或回答這 100 部高分神作的相關問題！🌊☀️
+      </div>
+    </div>
+    <div class="chat-input-area">
+      <input type="text" id="chat-input" placeholder="問問我關於電影的事...">
+      <button id="chat-send">傳送</button>
+    </div>
+  </div>
+
+</body>
+</html>
