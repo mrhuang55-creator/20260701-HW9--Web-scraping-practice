@@ -2,6 +2,8 @@
 
 這是一個整合網路爬蟲與前端 SPA (Single Page Application) 的夏日海灘風格電影探索專案。專案結合了自動化數據擷取與現代化的 AI 對話推薦技術。
 
+🚀 **線上測試網頁**：[CineScrape 線上探索殿堂](https://mrhuang55-creator.github.io/20260701-HW9--Web-scraping-practice/)
+
 ## 專案特色
 
 1. **自動化爬蟲**：
@@ -26,19 +28,3 @@
    ```bash
    python crawl_movies.py
    python json_to_csv.py
-   ```
-2. **開啟網頁 (HTML 純前端版)**：
-   直接使用瀏覽器開啟 `index.html`，或使用本地伺服器：
-   ```bash
-   python -m http.server 8000
-   ```
-3. **開啟網頁 (Streamlit 測試版)**：
-   我們額外提供了一個基於 Python Streamlit 框架的版本，您可以在終端機輸入：
-   ```bash
-   pip install streamlit requests
-   streamlit run streamlit_app.py
-   ```
-   即可開啟具有相同 UI 邏輯、多 API 支援與本地配對機制的 Streamlit 測試網站。
-
-4. **設定 AI 助手**：
-   點擊右下角聊天氣泡 -> 點擊齒輪 ⚙️ 圖示 -> 勾選「啟用 API」並輸入您的 API Key -> 點擊「測試連線並儲存」。
